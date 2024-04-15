@@ -51,7 +51,10 @@ func main() {
 	configureFrontend(r)
 	configureAPI(r)
 
-	log.Fatalln(r.Run("0.0.0.0:3002"))
+	if data.ConfigDatabase.WebserverHost == "" {
+		data.ConfigDatabase.WebserverHost = "0.0.0.0:3000"
+	}
+	log.Fatalln(r.Run(data.ConfigDatabase.WebserverHost))
 }
 
 func configureAPI(r *gin.Engine) {
