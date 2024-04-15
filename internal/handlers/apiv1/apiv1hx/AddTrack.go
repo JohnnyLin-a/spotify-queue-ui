@@ -29,6 +29,7 @@ func AddTrack(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 			return
 		}
 
+		ctx.Header("HX-Trigger-After-Swap", "clear-textarea")
 		ctx.Data(http.StatusOK, "text/plain", []byte("Added to queue!"))
 		ctx.AbortWithStatus(http.StatusOK)
 	}

@@ -5,6 +5,11 @@ import "github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
 templ sneakSongs(profile string) {
 	@basehtmx("Sneak Songs " + profile) {
 		@baseAuthenticatedHeader()
+		<script type="application/javascript">
+			document.body.addEventListener("clear-textarea", () => {
+				document.querySelector('textarea.form-control.form-control-lg').value = '';
+			})
+		</script>
 		<style>
 		.center {
 			margin: auto;
