@@ -20,7 +20,7 @@
 # Go workspace file
 go.work
 
-cmd/**/*_templ.go
+**/*_templ.go
 profiles
 /build
 .env

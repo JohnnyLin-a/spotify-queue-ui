@@ -10,6 +10,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/data"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/apiv1"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/apiv1/apiv1hx"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/middlewares"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/helpers"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
@@ -54,10 +55,14 @@ func main() {
 }
 
 func configureAPI(r *gin.Engine) {
-	apiV1 := r.Group(httppaths.API_V1_PREFIX)
 	{
+		apiV1 := r.Group(httppaths.API_V1_PREFIX)
 		apiV1.POST(httppaths.API_V1_PROFILES_UNSET, apiv1.ProfileUnset(runtimeContext))
 		apiV1.POST(httppaths.API_V1_PROFILES_SET, apiv1.ProfileSet(runtimeContext))
+		{
+			apiV1HX := apiV1.Group(httppaths.HX)
+			apiV1HX.GET(httppaths.API_V1_Q, apiv1hx.SearchSpotify(runtimeContext))
+		}
 	}
 }
 
@@ -76,8 +81,8 @@ func configureFrontend(r *gin.Engine) {
 		profileSelect(runtimeContext).Render(c, c.Writer)
 	})
 
-	ss := r.Group(httppaths.SNEAK_SONGS)
 	{
+		ss := r.Group(httppaths.SNEAK_SONGS)
 		ss.Use(middlewares.SelectedProfileMiddleware(runtimeContext))
 		ss.GET(httppaths.ROOT, func(ctx *gin.Context) {
 			sneakSongs(runtimeContext.SelectedProfile).Render(ctx, ctx.Writer)

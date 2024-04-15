@@ -1,5 +1,7 @@
 package main
 
+import "github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
+
 templ sneakSongs(profile string) {
 	@basehtmx("Sneak Songs " + profile) {
 		@baseAuthenticatedHeader()
@@ -11,6 +13,9 @@ templ sneakSongs(profile string) {
 		</style>
 		<div class="center">
 			<h3>Sneak songs for { profile }</h3>
+			<h3>Find track to add</h3>
+			<input type="text" name="q" hx-trigger="keyup changed delay:1s" hx-get={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_Q } hx-target="#sneak-songs-query" placeholder="Paste Track URL or Search here..."/>
+			<div id="sneak-songs-query"></div>
 		</div>
 	}
 }
