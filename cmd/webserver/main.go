@@ -7,27 +7,15 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/data"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/apiv1"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/middlewares"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
 )
 
-type tRuntimeContext struct {
-	SelectedProfile   string
-	AvailableProfiles []string
-}
-
-var runtimeContext = tRuntimeContext{
+var runtimeContext = &data.TRuntimeContext{
 	SelectedProfile:   "",
 	AvailableProfiles: []string{},
-}
-
-var SelectedProfileMiddleware gin.HandlerFunc = func(c *gin.Context) {
-	if runtimeContext.SelectedProfile == "" {
-		c.Header("HX-Location", httppaths.PROFILE_SELECT)
-		c.Redirect(http.StatusTemporaryRedirect, httppaths.PROFILE_SELECT)
-		c.Abort()
-		return
-	}
-	c.Next()
 }
 
 func main() {
@@ -38,7 +26,7 @@ func main() {
 	}
 
 	for _, e := range entries {
-		if e.IsDir() && strings.HasSuffix(e.Name(), ".json") {
+		if !e.IsDir() && strings.HasSuffix(e.Name(), ".json") {
 			runtimeContext.AvailableProfiles = append(runtimeContext.AvailableProfiles, e.Name())
 		}
 	}
@@ -48,6 +36,21 @@ func main() {
 
 	r := gin.Default()
 
+	configureFrontend(r)
+	configureAPI(r)
+
+	log.Fatalln(r.Run("0.0.0.0:3002"))
+}
+
+func configureAPI(r *gin.Engine) {
+	apiV1 := r.Group(httppaths.API_V1_PREFIX)
+	{
+		apiV1.POST(httppaths.API_V1_PROFILES_UNSET, apiv1.ProfileUnset(runtimeContext))
+		apiV1.POST(httppaths.API_V1_PROFILES_SET, apiv1.ProfileSet(runtimeContext))
+	}
+}
+
+func configureFrontend(r *gin.Engine) {
 	r.GET(httppaths.ROOT, func(c *gin.Context) {
 		c.Redirect(http.StatusPermanentRedirect, httppaths.PROFILE_SELECT)
 		c.Abort()
@@ -59,16 +62,14 @@ func main() {
 			c.Abort()
 			return
 		}
-		profileSelect().Render(c, c.Writer)
+		profileSelect(runtimeContext).Render(c, c.Writer)
 	})
 
-	cp := r.Group(httppaths.SNEAK_SONGS)
+	ss := r.Group(httppaths.SNEAK_SONGS)
 	{
-		cp.Use(SelectedProfileMiddleware)
-		cp.GET(httppaths.ROOT, func(ctx *gin.Context) {
-			sneakSongs().Render(ctx, ctx.Writer)
+		ss.Use(middlewares.SelectedProfileMiddleware(runtimeContext))
+		ss.GET(httppaths.ROOT, func(ctx *gin.Context) {
+			sneakSongs(runtimeContext.SelectedProfile).Render(ctx, ctx.Writer)
 		})
 	}
-
-	log.Fatalln(r.Run("0.0.0.0:3002"))
 }

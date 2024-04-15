@@ -1,6 +1,11 @@
 package main
 
-templ profileSelect() {
+import (
+	"github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/data"
+)
+
+templ profileSelect(runtimeConfig *data.TRuntimeContext) {
 	@basehtmx("Select Spotify Profile") {
 		<style>
 			.login-center {
@@ -12,10 +17,14 @@ templ profileSelect() {
 		<div class="login-center">
 			<div class="">
 				Profile: 
-				<input
-					type="text"
-					placeholder="Literally a placeholder for a future select element"
-				/>
+				<form>
+					<select name="profile" hx-post={ httppaths.API_V1_PREFIX + httppaths.API_V1_PROFILES_SET } hx-trigger="change">
+						<option value=""></option>
+						for _, item := range runtimeConfig.AvailableProfiles {
+							<option value={ item }>{ item }</option>
+						}
+					</select>
+				</form>
 			</div>
 		</div>
 	}

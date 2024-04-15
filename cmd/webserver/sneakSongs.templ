@@ -1,8 +1,10 @@
 package main
 
-templ sneakSongs() {
-	<div>
-		<div>headers stuff here</div>
-		{ children... }
-	</div>
+templ sneakSongs(profile string) {
+	@basehtmx("Sneak Songs " + profile) {
+		@baseAuthenticatedHeader()
+		<div>
+			sneak songs index
+		</div>
+	}
 }

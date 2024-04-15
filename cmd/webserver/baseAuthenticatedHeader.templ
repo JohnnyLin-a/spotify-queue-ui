@@ -1,0 +1,26 @@
+package main
+
+import (
+	"github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
+)
+
+templ baseAuthenticatedHeader() {
+	<div>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href={ httppaths.ROOT }>Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#" hx-post={ httppaths.API_V1_PREFIX + httppaths.API_V1_PROFILES_UNSET }>Change Profile</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		{ children... }
+	</div>
+}
