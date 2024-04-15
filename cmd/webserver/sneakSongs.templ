@@ -16,6 +16,7 @@ templ sneakSongs(profile string) {
 			<h3>Find track to add</h3>
 			<textarea class="form-control form-control-lg" style="width:100%;resize:none" type="text" name="q" hx-trigger="keyup changed delay:1s" hx-get={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_Q } hx-target="#sneak-songs-query" placeholder="Paste Track URL or Search here..."></textarea>
 			<div id="sneak-songs-query"></div>
+			<div id="sneak-songs-queue" hx-get={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_GET_QUEUE } hx-trigger="load"></div>
 		</div>
 	}
 }

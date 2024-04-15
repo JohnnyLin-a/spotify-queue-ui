@@ -7,4 +7,5 @@ const (
 	API_V1_PROFILES_SET   = "/profiles/set"
 	API_V1_Q              = "/q"
 	API_V1_ADD_TRACK      = "/add-track"
+	API_V1_GET_QUEUE      = "/get-queue"
 )

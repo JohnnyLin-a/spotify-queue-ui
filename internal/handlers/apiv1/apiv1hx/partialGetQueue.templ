@@ -1,0 +1,12 @@
+package apiv1hx
+
+import (
+	"github.com/zmb3/spotify/v2"
+)
+
+templ partialGetQueue(queue *spotify.Queue) {
+	<div>{ queue.CurrentlyPlaying.Name } - { queue.CurrentlyPlaying.Artists[0].Name } { queue.CurrentlyPlaying.Album.Name }</div>
+	for _, v := range queue.Items {
+		<div>{ v.Name + " - " + v.Artists[0].Name } { v.Album.Name }</div>
+	}
+}
