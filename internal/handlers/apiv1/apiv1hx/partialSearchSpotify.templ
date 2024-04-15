@@ -5,6 +5,6 @@ import "github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
 
 templ partialSearchSpotify(tracksList []spotify.FullTrack) {
 	for _, v := range tracksList {
-		<div><span><button hx-post={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_Q } hx-target="#sneak-songs-query" class="btn btn-success">Add</button></span> { v.Name + " - " + v.Artists[0].Name } { v.Album.Name }</div>
+		<div><span><button name="id" value={ v.ID.String() } hx-post={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_ADD_TRACK } hx-target="#sneak-songs-query" class="btn btn-success">Add</button></span> { v.Name + " - " + v.Artists[0].Name } { v.Album.Name }</div>
 	}
 }

@@ -1,7 +1,6 @@
 package apiv1hx
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,13 +12,11 @@ func SearchSpotify(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		q := ctx.Request.URL.Query().Get("q")
 		if q == "" {
-			log.Println("Failed with Query().Get")
-			ctx.AbortWithStatus(http.StatusBadRequest)
+			ctx.AbortWithStatus(http.StatusOK)
 			return
 		}
 		tracks, err := helpers.SearchSpotify(runtimeContext, q)
 		if err != nil {
-			log.Println("Failed with SearchSpotify", err)
 			ctx.AbortWithStatus(http.StatusBadRequest)
 			return
 		}

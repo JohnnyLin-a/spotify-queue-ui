@@ -62,6 +62,7 @@ func configureAPI(r *gin.Engine) {
 		{
 			apiV1HX := apiV1.Group(httppaths.HX)
 			apiV1HX.GET(httppaths.API_V1_Q, apiv1hx.SearchSpotify(runtimeContext))
+			apiV1HX.POST(httppaths.API_V1_ADD_TRACK, apiv1hx.AddTrack(runtimeContext))
 		}
 	}
 }
