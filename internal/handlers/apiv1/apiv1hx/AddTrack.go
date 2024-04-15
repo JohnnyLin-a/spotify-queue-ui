@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/data"
-	"github.com/zmb3/spotify/v2"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/helpers"
 )
 
 func AddTrack(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
@@ -22,15 +22,15 @@ func AddTrack(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 			ctx.Abort()
 			return
 		}
-		err = runtimeContext.SpotifyClient.QueueSong(ctx, spotify.ID(trackID))
+
+		err = helpers.QueueTrack(runtimeContext, trackID)
 		if err != nil {
 			ctx.Data(http.StatusInternalServerError, "text/plain", []byte("Failed to queue song!"))
 			ctx.Abort()
 			return
 		}
-
-		ctx.Header("HX-Trigger-After-Swap", "clear-textarea")
+		ctx.Header("HX-Trigger", "clear-textarea")
 		ctx.Data(http.StatusOK, "text/plain", []byte("Added to queue!"))
-		ctx.AbortWithStatus(http.StatusOK)
+		ctx.Abort()
 	}
 }

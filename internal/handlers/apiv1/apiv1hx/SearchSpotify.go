@@ -20,6 +20,14 @@ func SearchSpotify(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 			ctx.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
+
+		if len(tracks) == 1 {
+			helpers.QueueTrack(runtimeContext, tracks[0].ID.String())
+			ctx.Data(http.StatusOK, "text/plain", []byte("Added to queue!"))
+			ctx.Abort()
+			return
+		}
+
 		partialSearchSpotify(tracks).Render(ctx, ctx.Writer)
 		ctx.AbortWithStatus(http.StatusOK)
 	}

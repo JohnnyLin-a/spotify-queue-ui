@@ -27,6 +27,10 @@ func ProfileSet(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 			ctx.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
+		if err := helpers.StartupSpotify(runtimeContext, "profiles/"+profile); err != nil {
+			ctx.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
 		ctx.Header("HX-Location", httppaths.SNEAK_SONGS)
 		ctx.AbortWithStatus(http.StatusOK)
 	}

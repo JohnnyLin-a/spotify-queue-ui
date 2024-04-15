@@ -15,6 +15,10 @@ func GetQueue(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 			ctx.Data(http.StatusInternalServerError, "text/plain", []byte("Failed to load queue!"))
 			return
 		}
+		if queue == nil || len(queue.Items) == 0 {
+			ctx.Data(http.StatusOK, "text/plain", []byte("Empty queue!"))
+			return
+		}
 		partialGetQueue(queue).Render(ctx, ctx.Writer)
 		ctx.AbortWithStatus(http.StatusOK)
 	}
