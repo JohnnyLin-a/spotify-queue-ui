@@ -1,6 +1,7 @@
 package apiv1hx
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,8 @@ func GetQueue(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		queue, err := runtimeContext.SpotifyClient.GetQueue(ctx)
 
-		if err != nil {
+		if queue == nil || err != nil {
+			log.Println(err)
 			ctx.Data(http.StatusInternalServerError, "text/plain", []byte("Failed to load queue!"))
 			return
 		}

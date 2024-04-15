@@ -5,11 +5,6 @@ import "github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
 templ sneakSongs(profile string) {
 	@basehtmx("Sneak Songs " + profile) {
 		@baseAuthenticatedHeader()
-		<script type="application/javascript">
-			document.body.addEventListener("clear-textarea", () => {
-				document.querySelector('textarea.form-control.form-control-lg').value = '';
-			})
-		</script>
 		<style>
 		.center {
 			margin: auto;
@@ -19,9 +14,19 @@ templ sneakSongs(profile string) {
 		<div class="center">
 			<h3>Sneak songs for { profile }</h3>
 			<h3>Find track to add</h3>
-			<textarea class="form-control form-control-lg" style="width:100%;resize:none" type="text" name="q" hx-trigger="keyup changed delay:500ms" hx-get={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_Q } hx-target="#sneak-songs-query" placeholder="Paste Track URL or Search here..."></textarea>
+			<textarea class="form-control form-control-lg" style="width:100%;resize:none" type="text" name="q" hx-trigger="textarea-paste-clipboard from:body, keyup changed delay:500ms" hx-get={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_Q } hx-target="#sneak-songs-query" placeholder="Paste Track URL or Search here..."></textarea>
 			<div id="sneak-songs-query"></div>
 			<div id="sneak-songs-queue" hx-get={ httppaths.API_V1_PREFIX + httppaths.HX + httppaths.API_V1_GET_QUEUE } hx-trigger="load"></div>
 		</div>
+		<script type="application/javascript">
+			document.body.addEventListener("clear-textarea", () => {
+				document.querySelector('textarea.form-control.form-control-lg').value = '';
+			})
+			document.querySelector("textarea.form-control.form-control-lg").addEventListener("paste", (e) => {
+				event.preventDefault();
+				document.querySelector('textarea.form-control.form-control-lg').value = (event.clipboardData || window.clipboardData).getData("text");
+				document.body.dispatchEvent(new Event('textarea-paste-clipboard'));
+			})
+		</script>
 	}
 }
