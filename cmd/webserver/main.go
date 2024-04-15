@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -53,6 +55,10 @@ func main() {
 
 	if data.ConfigDatabase.WebserverHost == "" {
 		data.ConfigDatabase.WebserverHost = "0.0.0.0:3000"
+	}
+
+	if runtime.GOOS == "windows" {
+		exec.Command("rundll32", "url.dll,FileProtocolHandler", data.ConfigDatabase.WebserverHost).Start()
 	}
 	log.Fatalln(r.Run(data.ConfigDatabase.WebserverHost))
 }
