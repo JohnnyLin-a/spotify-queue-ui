@@ -3,8 +3,14 @@ package main
 templ sneakSongs(profile string) {
 	@basehtmx("Sneak Songs " + profile) {
 		@baseAuthenticatedHeader()
-		<div>
-			sneak songs index
+		<style>
+		.center {
+			margin: auto;
+			width: 50%;
+		}
+		</style>
+		<div class="center">
+			<h3>Sneak songs for { profile }</h3>
 		</div>
 	}
 }

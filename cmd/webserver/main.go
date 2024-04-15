@@ -7,20 +7,28 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/data"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/apiv1"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/handlers/middlewares"
+	"github.com/johnnylin-a/spotify-queue-ui/internal/helpers"
 	"github.com/johnnylin-a/spotify-queue-ui/internal/httppaths"
 )
 
 var runtimeContext = &data.TRuntimeContext{
 	SelectedProfile:   "",
 	AvailableProfiles: []string{},
+	SpotifyClient:     nil,
+}
+
+func init() {
+	cleanenv.ReadEnv(&data.ConfigDatabase)
+	cleanenv.ReadConfig(".env", &data.ConfigDatabase)
 }
 
 func main() {
 	// Load profiles
-	entries, err := os.ReadDir("./profiles")
+	entries, err := os.ReadDir(data.PROFILES_PATH)
 	if err != nil {
 		log.Fatal("Did not find `profiles` folder!")
 	}
@@ -32,6 +40,9 @@ func main() {
 	}
 	if len(runtimeContext.AvailableProfiles) == 1 {
 		runtimeContext.SelectedProfile = runtimeContext.AvailableProfiles[0]
+		if err := helpers.StartupSpotify(runtimeContext, data.PROFILES_PATH+runtimeContext.SelectedProfile); err != nil {
+			log.Fatalln(err)
+		}
 	}
 
 	r := gin.Default()

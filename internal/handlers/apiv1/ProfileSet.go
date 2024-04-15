@@ -28,10 +28,6 @@ func ProfileSet(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 			return
 		}
 		ctx.Header("HX-Location", httppaths.SNEAK_SONGS)
-		// ctx.Redirect(http.StatusTemporaryRedirect, httppaths.SNEAK_SONGS)
 		ctx.AbortWithStatus(http.StatusOK)
-
-		// slices.Contains(runtimeContext.AvailableProfiles, string)
-		// ctx.Header("HX-Location", httppaths.PROFILE_SELECT)
 	}
 }
