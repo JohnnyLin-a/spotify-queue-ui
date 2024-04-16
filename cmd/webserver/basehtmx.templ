@@ -15,9 +15,6 @@ templ basehtmx(title string) {
 						document.querySelector('textarea.form-control.form-control-lg').value = '';
 					});
 					document.body.addEventListener("paste", (e) => {
-						event.preventDefault();
-						console.log("PASTED")
-						document.querySelector('textarea.form-control.form-control-lg').value = (event.clipboardData || window.clipboardData).getData("text");
 						document.body.dispatchEvent(new Event('textarea-paste-clipboard'));
 					});
 				});

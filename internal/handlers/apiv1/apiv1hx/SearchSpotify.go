@@ -23,6 +23,7 @@ func SearchSpotify(runtimeContext *data.TRuntimeContext) func(*gin.Context) {
 
 		if len(tracks) == 1 {
 			helpers.QueueTrack(runtimeContext, tracks[0].ID.String())
+			ctx.Header("HX-Trigger", "clear-textarea")
 			ctx.Data(http.StatusOK, "text/plain", []byte("Added to queue!"))
 			ctx.Abort()
 			return
