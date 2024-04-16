@@ -58,7 +58,7 @@ func main() {
 	}
 
 	if runtime.GOOS == "windows" {
-		exec.Command("rundll32", "url.dll,FileProtocolHandler", "http://"+data.ConfigDatabase.WebserverHost).Start()
+		exec.Command("rundll32", "url.dll,FileProtocolHandler", "http://"+strings.ReplaceAll(data.ConfigDatabase.WebserverHost, "0.0.0.0", "localhost")).Start()
 	}
 	log.Fatalln(r.Run(data.ConfigDatabase.WebserverHost))
 }
