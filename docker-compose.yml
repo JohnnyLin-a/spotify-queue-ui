@@ -1,0 +1,10 @@
+services:
+  spotify-queue-ui:
+    image: ghcr.io/johnnylin-a/spotify-queue-ui
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./.profiles:/profiles

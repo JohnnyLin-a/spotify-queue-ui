@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM golang:1.22-alpine
+ARG TARGETARCH
+ARG TARGETVARIANT
 RUN apk --no-cache add tzdata
 
 WORKDIR /src/
@@ -12,7 +14,7 @@ COPY internal /src/internal
 
 ARG APPNAME=webserver
 COPY cmd/${APPNAME} /src/cmd/${APPNAME}
-RUN cd /src/cmd/${APPNAME} && CGO_ENABLED=0 GOOS=linux go build -o /src/main .
+RUN cd /src/cmd/${APPNAME} && CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT//v/} go build -o /src/main .
 
 FROM scratch
 
